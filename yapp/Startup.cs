@@ -4,12 +4,13 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
+using yapp.Infrastructure;
+using yapp.Infrastructure.Errors;
 
 namespace yapp
 {
@@ -26,6 +27,7 @@ namespace yapp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMediatR();
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
             services.AddEntityFrameworkSqlite();
 
@@ -41,11 +43,17 @@ namespace yapp
             });
 
             services.AddCors();
-            services.AddMvc()
+            services.AddMvc(opt =>
+                {
+                    opt.Filters.Add(typeof(ValidatorActionFilter));
+                })
                 .AddJsonOptions(opt => { opt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore; })
                 .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
 
             services.AddAutoMapper(GetType().Assembly);
+
+            services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
@@ -54,6 +62,8 @@ namespace yapp
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddSerilogLogging();
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             if (env.IsDevelopment())
             {
@@ -69,16 +79,10 @@ namespace yapp
             app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint
-            app.UseSwagger(c =>
-            {
-                c.RouteTemplate = "swagger/{documentName}/swagger.json";
-            });
+            app.UseSwagger(c => { c.RouteTemplate = "swagger/{documentName}/swagger.json"; });
 
             // Enable middleware to serve swagger-ui assets(HTML, JS, CSS etc.)
-            app.UseSwaggerUI(x =>
-            {
-                x.SwaggerEndpoint("/swagger/v1/swagger.json", "yapp API V1");
-            });
+            app.UseSwaggerUI(x => { x.SwaggerEndpoint("/swagger/v1/swagger.json", "yapp API V1"); });
         }
     }
 }
