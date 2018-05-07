@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  yapp:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "yapp", "yapp\yapp.csproj", "{C20CBE7E-D3FD-4D7B-9A68-3706A356101C}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{71CF2681-7708-4F05-890F-A84086F1C10F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C20CBE7E-D3FD-4D7B-9A68-3706A356101C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C20CBE7E-D3FD-4D7B-9A68-3706A356101C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C20CBE7E-D3FD-4D7B-9A68-3706A356101C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C20CBE7E-D3FD-4D7B-9A68-3706A356101C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71CF2681-7708-4F05-890F-A84086F1C10F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71CF2681-7708-4F05-890F-A84086F1C10F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71CF2681-7708-4F05-890F-A84086F1C10F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71CF2681-7708-4F05-890F-A84086F1C10F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {465EA785-A76D-4711-AF24-0E2B33D9E5E0}
+	EndGlobalSection
+EndGlobal

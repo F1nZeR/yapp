@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  yapp:
+    image: yapp
+    build:
+      context: .
+      dockerfile: yapp/Dockerfile
