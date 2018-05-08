@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics.CodeAnalysis;
+using AutoMapper;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -11,9 +12,11 @@ using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using yapp.Infrastructure;
 using yapp.Infrastructure.Errors;
+using yapp.Infrastructure.Security;
 
 namespace yapp
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -45,6 +48,7 @@ namespace yapp
             services.AddCors();
             services.AddMvc(opt =>
                 {
+                    opt.Conventions.Add(new GroupByApiRootConvention());
                     opt.Filters.Add(typeof(ValidatorActionFilter));
                 })
                 .AddJsonOptions(opt => { opt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore; })
@@ -52,10 +56,12 @@ namespace yapp
 
             services.AddAutoMapper(GetType().Assembly);
 
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddJwt();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
