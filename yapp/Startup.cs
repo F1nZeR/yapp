@@ -19,6 +19,8 @@ namespace yapp
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class Startup
     {
+        public const string DatabaseFile = "realworld.db";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,7 +34,9 @@ namespace yapp
             services.AddMediatR();
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
-            services.AddEntityFrameworkSqlite();
+            services
+                .AddEntityFrameworkSqlite()
+                .AddDbContext<YappDbContext>();
 
             services.AddLocalization(x => x.ResourcesPath = "Resources");
 
@@ -60,6 +64,8 @@ namespace yapp
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddSingleton(new YappDbContext(DatabaseFile));
 
             services.AddJwt();
         }
@@ -89,6 +95,8 @@ namespace yapp
 
             // Enable middleware to serve swagger-ui assets(HTML, JS, CSS etc.)
             app.UseSwaggerUI(x => { x.SwaggerEndpoint("/swagger/v1/swagger.json", "yapp API V1"); });
+
+            app.ApplicationServices.GetRequiredService<YappDbContext>().Database.EnsureCreated();
         }
     }
 }
