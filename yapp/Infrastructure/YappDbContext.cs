@@ -7,12 +7,12 @@ namespace yapp.Infrastructure
     {
         private readonly string _databaseName;
 
+        public DbSet<Person> Persons { get; set; }
+
         public YappDbContext(string databaseName)
         {
             _databaseName = databaseName;
         }
-
-        public DbSet<Person> Persons { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
