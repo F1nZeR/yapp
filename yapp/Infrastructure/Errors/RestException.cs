@@ -9,6 +9,7 @@ namespace yapp.Infrastructure.Errors
             : base(message)
         {
             Code = code;
+            // todo: add more info for rest errors
         }
 
         public HttpStatusCode Code { get; }
